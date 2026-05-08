@@ -130,15 +130,47 @@ class TestGraphExtractor(unittest.TestCase):
         {"id": 2, "x": 500.0, "y": 500.0, "z": 0.0},
     ]
 
+    def test_invalid_proximity_raises(self):
+        with self.assertRaises(ValueError):
+            GraphExtractor(proximity_threshold=0)
+
+    def test_invalid_proximity_negative_raises(self):
+        with self.assertRaises(ValueError):
+            GraphExtractor(proximity_threshold=-10.0)
+
+    def test_build_graph_creates_correct_node_count(self):
+        extractor = GraphExtractor(proximity_threshold=200.0)
+        graph = extractor.build_graph(self.SAMPLE_NAVMESH)
+        self.assertEqual(graph.node_count(), 3)
+
     def test_build_graph_close_nodes_connected(self):
         extractor = GraphExtractor(proximity_threshold=200.0)
         graph = extractor.build_graph(self.SAMPLE_NAVMESH)
         self.assertTrue(graph.has_edge(0, 1))
+        self.assertTrue(graph.has_edge(1, 0))  # bidirectional
 
     def test_build_graph_distant_nodes_not_connected(self):
         extractor = GraphExtractor(proximity_threshold=200.0)
         graph = extractor.build_graph(self.SAMPLE_NAVMESH)
         self.assertFalse(graph.has_edge(0, 2))
+        self.assertFalse(graph.has_edge(2, 0))
+
+    def test_build_graph_edge_weight_is_distance(self):
+        extractor = GraphExtractor(proximity_threshold=200.0)
+        graph = extractor.build_graph(self.SAMPLE_NAVMESH)
+        self.assertAlmostEqual(graph.edge_weight(0, 1), 100.0)
+
+    def test_build_graph_all_within_threshold_connected(self):
+        close_nodes = [
+            {"id": 0, "x": 0.0,  "y": 0.0, "z": 0.0},
+            {"id": 1, "x": 50.0, "y": 0.0, "z": 0.0},
+            {"id": 2, "x": 0.0,  "y": 50.0, "z": 0.0},
+        ]
+        extractor = GraphExtractor(proximity_threshold=100.0)
+        graph = extractor.build_graph(close_nodes)
+        self.assertTrue(graph.has_edge(0, 1))
+        self.assertTrue(graph.has_edge(0, 2))
+        self.assertTrue(graph.has_edge(1, 2))
 
     def test_parse_navmesh_data_from_file(self):
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
@@ -148,6 +180,18 @@ class TestGraphExtractor(unittest.TestCase):
             extractor = GraphExtractor()
             data = extractor.parse_navmesh_data(tmppath)
             self.assertEqual(len(data), 3)
+        finally:
+            os.unlink(tmppath)
+
+    def test_parse_navmesh_missing_field_raises(self):
+        bad_data = [{"id": 0, "x": 0.0, "y": 0.0}]  # missing 'z'
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            json.dump(bad_data, f)
+            tmppath = f.name
+        try:
+            extractor = GraphExtractor()
+            with self.assertRaises(ValueError):
+                extractor.parse_navmesh_data(tmppath)
         finally:
             os.unlink(tmppath)
 
