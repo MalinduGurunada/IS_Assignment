@@ -14,6 +14,8 @@
  *
  * Other students access this actor to run their search algorithms.
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FISGraphChangedDelegate);
+
 UCLASS(BlueprintType, Blueprintable, Category="IS Navigation")
 class FOREST_API AISNavigationGraph : public AActor
 {
@@ -95,7 +97,7 @@ public:
 
     // Bind this in Blueprint to call A* whenever the graph changes
     UPROPERTY(BlueprintAssignable, Category="IS Graph")
-    FSimpleDynamicMulticastDelegate OnGraphChanged;
+    FISGraphChangedDelegate OnGraphChanged;
 
     UFUNCTION(BlueprintCallable, Category="IS Graph")
     void TriggerRecalculation();
