@@ -1,0 +1,66 @@
+# ============================================================
+# WHITELIST .gitignore — Ignore EVERYTHING, then allow only
+# the specific folders needed for the IS assignment.
+# ============================================================
+
+# Step 1: Ignore ALL content by default
+Content/
+
+# Step 2: Allow ONLY these Content subfolders
+!Content/Blueprints/
+!Content/Blueprints/**
+!Content/Trex/
+!Content/Trex/**
+!Content/Input/
+!Content/Input/**
+!Content/ThirdPerson/
+!Content/ThirdPerson/**
+!Content/Misc/
+!Content/Misc/**
+
+# When you create these later, uncomment them:
+# !Content/Maps/
+# !Content/Maps/**
+# !Content/Source/
+# !Content/Source/**
+
+# ============================================================
+# Unreal Engine generated folders (NEVER upload)
+# ============================================================
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+
+# Per-user editor settings
+Config/DefaultEditorPerProjectUserSettings.ini
+Config/Layouts/
+
+# ============================================================
+# IDE files
+# ============================================================
+.vs/
+.vscode/
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.user
+*.userprefs
+*.idea/
+
+# ============================================================
+# macOS / misc
+# ============================================================
+*.xcodeproj
+*.xcworkspace
+*.log
+*.tmp
+*.7z
+*.zip
+Thumbs.db
+.DS_Store
+*.url
