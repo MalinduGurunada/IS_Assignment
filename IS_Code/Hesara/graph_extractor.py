@@ -88,5 +88,8 @@ class GraphExtractor:
     @staticmethod
     def _euclidean_distance(a: Dict[str, Any], b: Dict[str, Any]) -> float:
         """Compute 3D Euclidean distance between two node dicts."""
-        # TODO: return sqrt((a.x-b.x)^2 + (a.y-b.y)^2 + (a.z-b.z)^2)
-        pass
+        return math.sqrt(
+            (a['x'] - b['x']) ** 2 +
+            (a['y'] - b['y']) ** 2 +
+            (a['z'] - b['z']) ** 2
+        )
