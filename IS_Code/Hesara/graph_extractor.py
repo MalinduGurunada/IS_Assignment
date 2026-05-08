@@ -29,6 +29,23 @@ class GraphExtractor:
             raise ValueError("proximity_threshold must be positive")
         self.proximity_threshold = proximity_threshold
 
+    def set_threshold(self, proximity_threshold: float) -> None:
+        """
+        Update the proximity threshold used when building edges.
+
+        Allows the same extractor instance to be reused with different
+        thresholds without creating a new object.
+
+        Args:
+            proximity_threshold: New positive maximum edge distance.
+
+        Raises:
+            ValueError: If proximity_threshold is not positive.
+        """
+        if proximity_threshold <= 0:
+            raise ValueError("proximity_threshold must be positive")
+        self.proximity_threshold = proximity_threshold
+
     def parse_navmesh_data(self, filepath: str) -> List[Dict[str, Any]]:
         """
         Load NavMesh node data from a JSON file.
