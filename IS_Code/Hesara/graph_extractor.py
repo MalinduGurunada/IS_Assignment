@@ -64,13 +64,20 @@ class GraphExtractor:
         Returns:
             A populated Graph object.
         """
-        # TODO:
-        # 1. Create an empty Graph
-        # 2. Add a GraphNode for each entry in navmesh_data
-        # 3. For every pair (i, j), compute 3D distance
-        # 4. If distance <= self.proximity_threshold, add_edge with that weight
-        # 5. Return the graph
-        pass
+        graph = Graph()
+        for entry in navmesh_data:
+            node = GraphNode(
+                node_id=entry['id'],
+                position=(entry['x'], entry['y'], entry['z'])
+            )
+            graph.add_node(node)
+        nodes = list(navmesh_data)
+        for i in range(len(nodes)):
+            for j in range(i + 1, len(nodes)):
+                dist = self._euclidean_distance(nodes[i], nodes[j])
+                if dist <= self.proximity_threshold:
+                    graph.add_edge(nodes[i]['id'], nodes[j]['id'], weight=dist)
+        return graph
 
     def extract_from_file(self, filepath: str) -> Graph:
         """Convenience: parse file and build graph in one call."""
