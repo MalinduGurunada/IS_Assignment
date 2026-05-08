@@ -26,18 +26,15 @@ class Graph:
 
     def add_node(self, node: GraphNode) -> None:
         """Insert a GraphNode into the graph."""
-        # TODO: store node in self._nodes keyed by node.node_id
-        pass
+        self._nodes[node.node_id] = node
 
     def get_node(self, node_id: int) -> Optional[GraphNode]:
         """Return the GraphNode for node_id, or None if not found."""
-        # TODO: return self._nodes.get(node_id)
-        pass
+        return self._nodes.get(node_id)
 
     def all_nodes(self) -> List[GraphNode]:
         """Return all nodes as a list."""
-        # TODO: return list(self._nodes.values())
-        pass
+        return list(self._nodes.values())
 
     # ------------------------------------------------------------------
     # Edge operations
