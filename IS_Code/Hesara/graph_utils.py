@@ -108,5 +108,20 @@ def import_graph_from_json(filepath: str) -> Graph:
     Returns:
         A populated Graph object.
     """
-    # TODO: read JSON, create GraphNodes and add edges to a new Graph, return it
-    pass
+    with open(filepath, 'r') as f:
+        data = json.load(f)
+
+    graph = Graph()
+    for node_data in data['nodes']:
+        node = GraphNode(
+            node_id=node_data['id'],
+            position=(node_data['x'], node_data['y'], node_data['z'])
+        )
+        graph.add_node(node)
+
+    for edge in data['edges']:
+        if not graph.has_edge(edge['from'], edge['to']):
+            graph.add_edge(edge['from'], edge['to'], weight=edge['weight'],
+                           bidirectional=False)
+
+    return graph
