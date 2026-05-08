@@ -21,8 +21,7 @@ def euclidean_distance(a: Tuple[float, float, float],
 
     Time complexity: O(1)
     """
-    # TODO: return math.sqrt(sum((ai - bi)**2 for ai, bi in zip(a, b)))
-    pass
+    return math.sqrt(sum((ai - bi) ** 2 for ai, bi in zip(a, b)))
 
 
 def validate_graph(graph: Graph) -> List[str]:
