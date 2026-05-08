@@ -106,5 +106,17 @@ class Graph:
         """Return total number of directed edges."""
         return len(self._weights)
 
+    def node_ids(self) -> List[int]:
+        """Return all node ids as a sorted list — O(n)."""
+        return sorted(self._nodes.keys())
+
+    def __contains__(self, node_id: int) -> bool:
+        """Support `node_id in graph` syntax for O(1) membership test."""
+        return node_id in self._nodes
+
+    def __len__(self) -> int:
+        """Return node count via len(graph)."""
+        return len(self._nodes)
+
     def __repr__(self) -> str:
         return f"Graph(nodes={self.node_count()}, edges={self.edge_count()})"
