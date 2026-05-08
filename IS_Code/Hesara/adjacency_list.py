@@ -55,6 +55,8 @@ class Graph:
             raise KeyError(f"Node {from_id} not in graph")
         if to_id not in self._nodes:
             raise KeyError(f"Node {to_id} not in graph")
+        if from_id == to_id:
+            raise ValueError(f"Self-loop not allowed: node {from_id}")
         self._nodes[from_id].add_neighbor(to_id)
         self._weights[(from_id, to_id)] = weight
         if bidirectional:
