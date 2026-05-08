@@ -42,11 +42,13 @@ class GraphExtractor:
         Returns:
             List of node dicts with keys: id, x, y, z.
         """
-        # TODO:
-        # 1. Open and parse the JSON file
-        # 2. Validate each entry has 'id', 'x', 'y', 'z' fields
-        # 3. Return the list of dicts
-        pass
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        for entry in data:
+            for key in ('id', 'x', 'y', 'z'):
+                if key not in entry:
+                    raise ValueError(f"NavMesh entry missing field '{key}': {entry}")
+        return data
 
     def build_graph(self, navmesh_data: List[Dict[str, Any]]) -> Graph:
         """
