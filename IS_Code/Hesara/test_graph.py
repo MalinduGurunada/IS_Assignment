@@ -202,6 +202,26 @@ class TestGraphUtils(unittest.TestCase):
         dist = euclidean_distance((0.0, 0.0, 0.0), (3.0, 4.0, 0.0))
         self.assertAlmostEqual(dist, 5.0)
 
+    def test_export_creates_valid_json(self):
+        graph = Graph()
+        graph.add_node(GraphNode(0, (0.0, 0.0, 0.0)))
+        graph.add_node(GraphNode(1, (10.0, 20.0, 5.0)))
+        graph.add_edge(0, 1, weight=22.9)
+
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            tmppath = f.name
+        try:
+            export_graph_to_json(graph, tmppath)
+            with open(tmppath) as fh:
+                data = json.load(fh)
+            node_ids = {n['id'] for n in data['nodes']}
+            self.assertEqual(node_ids, {0, 1})
+            edge_pairs = {(e['from'], e['to']) for e in data['edges']}
+            self.assertIn((0, 1), edge_pairs)
+            self.assertIn((1, 0), edge_pairs)
+        finally:
+            os.unlink(tmppath)
+
     def test_export_import_roundtrip(self):
         graph = Graph()
         graph.add_node(GraphNode(0, (0.0, 0.0, 0.0)))
