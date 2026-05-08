@@ -62,8 +62,19 @@ def graph_stats(graph: Graph) -> Dict[str, Any]:
 
     Returns keys: node_count, edge_count, avg_degree, isolated_nodes.
     """
-    # TODO: compute and return stats dict
-    pass
+    nodes = graph.all_nodes()
+    node_count = len(nodes)
+    edge_count = graph.edge_count()
+    total_degree = sum(node.degree() for node in nodes)
+    avg_degree = total_degree / node_count if node_count > 0 else 0.0
+    isolated = sum(1 for node in nodes if node.degree() == 0)
+
+    return {
+        "node_count": node_count,
+        "edge_count": edge_count,
+        "avg_degree": round(avg_degree, 4),
+        "isolated_nodes": isolated,
+    }
 
 
 def export_graph_to_json(graph: Graph, filepath: str) -> None:
