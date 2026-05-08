@@ -24,17 +24,39 @@ class GraphNode:
     neighbors: List[int] = field(default_factory=list)
 
     def add_neighbor(self, neighbor_id: int) -> None:
-        """Add a neighbor by node_id if not already present."""
+        """
+        Add a neighbor by node_id if not already present.
+
+        Args:
+            neighbor_id: The node_id of the adjacent node to add.
+
+        Time complexity: O(n) where n is current neighbor count
+        (membership check on a list).
+        """
         if neighbor_id not in self.neighbors:
             self.neighbors.append(neighbor_id)
 
     def remove_neighbor(self, neighbor_id: int) -> None:
-        """Remove a neighbor by node_id if it exists."""
+        """
+        Remove a neighbor by node_id if it exists.
+
+        Args:
+            neighbor_id: The node_id to remove from the neighbor list.
+
+        Silent no-op if neighbor_id is not present.
+        """
         if neighbor_id in self.neighbors:
             self.neighbors.remove(neighbor_id)
 
     def degree(self) -> int:
-        """Return the number of direct neighbors (node degree)."""
+        """
+        Return the number of direct neighbors (node degree).
+
+        In an undirected graph this equals the number of edges incident
+        to this node. In a directed graph it represents out-degree only.
+
+        Time complexity: O(1).
+        """
         return len(self.neighbors)
 
     def __repr__(self) -> str:
