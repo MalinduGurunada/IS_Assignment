@@ -36,8 +36,24 @@ def validate_graph(graph: Graph) -> List[str]:
     Returns:
         List of warning messages. Empty list means the graph is valid.
     """
-    # TODO: iterate nodes and edges; collect and return warnings
-    pass
+    warnings = []
+    node_ids = {node.node_id for node in graph.all_nodes()}
+
+    for node in graph.all_nodes():
+        if node.degree() == 0:
+            warnings.append(f"Node {node.node_id} is isolated (no neighbors)")
+        for neighbor_id in node.neighbors:
+            if neighbor_id not in node_ids:
+                warnings.append(
+                    f"Node {node.node_id} references non-existent neighbor {neighbor_id}"
+                )
+            weight = graph.edge_weight(node.node_id, neighbor_id)
+            if weight < 0:
+                warnings.append(
+                    f"Negative weight {weight} on edge ({node.node_id} -> {neighbor_id})"
+                )
+
+    return warnings
 
 
 def graph_stats(graph: Graph) -> Dict[str, Any]:
