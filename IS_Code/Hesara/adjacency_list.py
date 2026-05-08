@@ -51,17 +51,26 @@ class Graph:
             weight       : Edge cost (default 1.0).
             bidirectional: Also add the reverse edge (default True).
         """
-        # TODO:
-        # 1. Validate both nodes exist; raise KeyError if not
-        # 2. Call from_node.add_neighbor(to_id) and store weight in self._weights
-        # 3. If bidirectional, also add the reverse direction
-        pass
+        if from_id not in self._nodes:
+            raise KeyError(f"Node {from_id} not in graph")
+        if to_id not in self._nodes:
+            raise KeyError(f"Node {to_id} not in graph")
+        self._nodes[from_id].add_neighbor(to_id)
+        self._weights[(from_id, to_id)] = weight
+        if bidirectional:
+            self._nodes[to_id].add_neighbor(from_id)
+            self._weights[(to_id, from_id)] = weight
 
     def remove_edge(self, from_id: int, to_id: int,
                     bidirectional: bool = True) -> None:
         """Remove an edge (and optionally its reverse)."""
-        # TODO: call remove_neighbor on both nodes and delete from self._weights
-        pass
+        self._weights.pop((from_id, to_id), None)
+        if from_id in self._nodes:
+            self._nodes[from_id].remove_neighbor(to_id)
+        if bidirectional:
+            self._weights.pop((to_id, from_id), None)
+            if to_id in self._nodes:
+                self._nodes[to_id].remove_neighbor(from_id)
 
     def has_edge(self, from_id: int, to_id: int) -> bool:
         """Return True if an edge exists from from_id to to_id."""
