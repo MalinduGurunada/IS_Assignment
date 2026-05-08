@@ -247,5 +247,72 @@ class TestGraphUtils(unittest.TestCase):
         self.assertGreater(len(warnings), 0)
 
 
+class TestGraphStats(unittest.TestCase):
+    """Tests for graph_stats utility."""
+
+    def _make_connected_graph(self):
+        from graph_utils import graph_stats
+        g = Graph()
+        for i in range(4):
+            g.add_node(GraphNode(i, (float(i * 100), 0.0, 0.0)))
+        g.add_edge(0, 1)
+        g.add_edge(1, 2)
+        g.add_edge(2, 3)
+        return g
+
+    def test_stats_node_count(self):
+        from graph_utils import graph_stats
+        g = self._make_connected_graph()
+        stats = graph_stats(g)
+        self.assertEqual(stats['node_count'], 4)
+
+    def test_stats_edge_count(self):
+        from graph_utils import graph_stats
+        g = self._make_connected_graph()
+        stats = graph_stats(g)
+        self.assertEqual(stats['edge_count'], 6)  # 3 bidirectional = 6 directed
+
+    def test_stats_isolated_zero_when_all_connected(self):
+        from graph_utils import graph_stats
+        g = self._make_connected_graph()
+        stats = graph_stats(g)
+        self.assertEqual(stats['isolated_nodes'], 0)
+
+    def test_stats_isolated_counts_lone_node(self):
+        from graph_utils import graph_stats
+        g = Graph()
+        g.add_node(GraphNode(0, (0.0, 0.0, 0.0)))
+        g.add_node(GraphNode(1, (100.0, 0.0, 0.0)))
+        g.add_node(GraphNode(2, (200.0, 0.0, 0.0)))
+        g.add_edge(0, 1)
+        stats = graph_stats(g)
+        self.assertEqual(stats['isolated_nodes'], 1)
+
+
+class TestExtractFromFile(unittest.TestCase):
+    """Integration test: extract_from_file reads JSON and builds graph."""
+
+    def test_extract_from_sample_navmesh(self):
+        import os
+        here = os.path.dirname(__file__)
+        fixture = os.path.join(here, 'sample_navmesh.json')
+        if not os.path.exists(fixture):
+            self.skipTest("sample_navmesh.json not present")
+        extractor = GraphExtractor(proximity_threshold=200.0)
+        graph = extractor.extract_from_file(fixture)
+        self.assertGreater(graph.node_count(), 0)
+        self.assertGreater(graph.edge_count(), 0)
+
+    def test_set_threshold_updates_correctly(self):
+        extractor = GraphExtractor(proximity_threshold=100.0)
+        extractor.set_threshold(500.0)
+        self.assertEqual(extractor.proximity_threshold, 500.0)
+
+    def test_set_threshold_invalid_raises(self):
+        extractor = GraphExtractor()
+        with self.assertRaises(ValueError):
+            extractor.set_threshold(-5.0)
+
+
 if __name__ == "__main__":
     unittest.main()
