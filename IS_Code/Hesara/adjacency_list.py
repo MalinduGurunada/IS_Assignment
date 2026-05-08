@@ -25,15 +25,29 @@ class Graph:
     # ------------------------------------------------------------------
 
     def add_node(self, node: GraphNode) -> None:
-        """Insert a GraphNode into the graph."""
+        """
+        Insert a GraphNode into the graph.
+
+        Overwrites any existing node with the same node_id.
+        Time complexity: O(1).
+        """
         self._nodes[node.node_id] = node
 
     def get_node(self, node_id: int) -> Optional[GraphNode]:
-        """Return the GraphNode for node_id, or None if not found."""
+        """
+        Return the GraphNode for node_id, or None if not found.
+
+        Time complexity: O(1).
+        """
         return self._nodes.get(node_id)
 
     def all_nodes(self) -> List[GraphNode]:
-        """Return all nodes as a list."""
+        """
+        Return all nodes as a list.
+
+        Order is insertion order (Python 3.7+ dict guarantee).
+        Time complexity: O(n).
+        """
         return list(self._nodes.values())
 
     # ------------------------------------------------------------------
