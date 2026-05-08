@@ -23,10 +23,26 @@ class TestGraphNode(unittest.TestCase):
         self.assertEqual(node.position, (0.0, 0.0, 0.0))
         self.assertEqual(node.neighbors, [])
 
+    def test_node_creation_3d_position(self):
+        node = GraphNode(node_id=5, position=(10.5, -3.2, 100.0))
+        self.assertEqual(node.position, (10.5, -3.2, 100.0))
+
+    def test_node_default_no_neighbors(self):
+        node = GraphNode(node_id=0, position=(0.0, 0.0, 0.0))
+        self.assertEqual(len(node.neighbors), 0)
+        self.assertEqual(node.degree(), 0)
+
     def test_add_neighbor(self):
         node = GraphNode(node_id=1, position=(0.0, 0.0, 0.0))
         node.add_neighbor(2)
         self.assertIn(2, node.neighbors)
+
+    def test_add_multiple_neighbors(self):
+        node = GraphNode(node_id=1, position=(0.0, 0.0, 0.0))
+        node.add_neighbor(2)
+        node.add_neighbor(3)
+        node.add_neighbor(4)
+        self.assertEqual(sorted(node.neighbors), [2, 3, 4])
 
     def test_add_neighbor_no_duplicates(self):
         node = GraphNode(node_id=1, position=(0.0, 0.0, 0.0))
@@ -40,11 +56,22 @@ class TestGraphNode(unittest.TestCase):
         node.remove_neighbor(2)
         self.assertNotIn(2, node.neighbors)
 
+    def test_remove_nonexistent_neighbor_no_error(self):
+        node = GraphNode(node_id=1, position=(0.0, 0.0, 0.0))
+        node.remove_neighbor(99)  # should not raise
+
     def test_degree(self):
         node = GraphNode(node_id=1, position=(0.0, 0.0, 0.0))
         node.add_neighbor(2)
         node.add_neighbor(3)
         self.assertEqual(node.degree(), 2)
+
+    def test_degree_after_remove(self):
+        node = GraphNode(node_id=1, position=(0.0, 0.0, 0.0))
+        node.add_neighbor(2)
+        node.add_neighbor(3)
+        node.remove_neighbor(2)
+        self.assertEqual(node.degree(), 1)
 
 
 class TestGraph(unittest.TestCase):
