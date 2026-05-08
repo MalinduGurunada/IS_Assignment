@@ -76,7 +76,8 @@ class GraphExtractor:
             for j in range(i + 1, len(nodes)):
                 dist = self._euclidean_distance(nodes[i], nodes[j])
                 if dist <= self.proximity_threshold:
-                    graph.add_edge(nodes[i]['id'], nodes[j]['id'], weight=dist)
+                    graph.add_edge(nodes[i]['id'], nodes[j]['id'], weight=dist,
+                                   bidirectional=True)
         return graph
 
     def extract_from_file(self, filepath: str) -> Graph:
