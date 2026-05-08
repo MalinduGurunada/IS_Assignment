@@ -74,8 +74,7 @@ class Graph:
 
     def has_edge(self, from_id: int, to_id: int) -> bool:
         """Return True if an edge exists from from_id to to_id."""
-        # TODO: check self._weights for the key (from_id, to_id)
-        pass
+        return (from_id, to_id) in self._weights
 
     def get_neighbors(self, node_id: int) -> List[Tuple[int, float]]:
         """
@@ -84,13 +83,14 @@ class Graph:
         Returns:
             List of (neighbor_id, weight) tuples.
         """
-        # TODO: look up node, iterate its neighbors, return with weights
-        pass
+        node = self._nodes.get(node_id)
+        if not node:
+            return []
+        return [(nid, self._weights.get((node_id, nid), 1.0)) for nid in node.neighbors]
 
     def edge_weight(self, from_id: int, to_id: int) -> float:
         """Return the weight of edge (from_id -> to_id)."""
-        # TODO: return self._weights.get((from_id, to_id), float('inf'))
-        pass
+        return self._weights.get((from_id, to_id), float('inf'))
 
     # ------------------------------------------------------------------
     # Graph statistics
@@ -98,13 +98,11 @@ class Graph:
 
     def node_count(self) -> int:
         """Return total number of nodes."""
-        # TODO: return len(self._nodes)
-        pass
+        return len(self._nodes)
 
     def edge_count(self) -> int:
         """Return total number of directed edges."""
-        # TODO: return len(self._weights)
-        pass
+        return len(self._weights)
 
     def __repr__(self) -> str:
         return f"Graph(nodes={self.node_count()}, edges={self.edge_count()})"
