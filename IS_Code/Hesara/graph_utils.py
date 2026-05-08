@@ -60,8 +60,18 @@ def export_graph_to_json(graph: Graph, filepath: str) -> None:
           "edges": [{"from": 0, "to": 1, "weight": 141.4}, ...]
         }
     """
-    # TODO: build the dict structure and write to filepath with json.dump
-    pass
+    nodes = []
+    for node in graph.all_nodes():
+        x, y, z = node.position
+        nodes.append({"id": node.node_id, "x": x, "y": y, "z": z})
+
+    edges = []
+    for node in graph.all_nodes():
+        for neighbor_id, weight in graph.get_neighbors(node.node_id):
+            edges.append({"from": node.node_id, "to": neighbor_id, "weight": round(weight, 4)})
+
+    with open(filepath, 'w') as f:
+        json.dump({"nodes": nodes, "edges": edges}, f, indent=2)
 
 
 def import_graph_from_json(filepath: str) -> Graph:
