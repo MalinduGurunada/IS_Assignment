@@ -25,6 +25,8 @@ class GraphExtractor:
     """
 
     def __init__(self, proximity_threshold: float = 200.0) -> None:
+        if proximity_threshold <= 0:
+            raise ValueError("proximity_threshold must be positive")
         self.proximity_threshold = proximity_threshold
 
     def parse_navmesh_data(self, filepath: str) -> List[Dict[str, Any]]:
