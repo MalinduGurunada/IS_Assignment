@@ -122,15 +122,84 @@ Work through these commits in order. Complete each one before moving to the next
 
 ---
 
-## Algorithmic Complexity to Know for Viva
+## Usage Examples
+
+### Build a graph from a NavMesh JSON file
+```python
+from graph_extractor import GraphExtractor
+
+extractor = GraphExtractor(proximity_threshold=200.0)
+graph = extractor.extract_from_file("sample_navmesh.json")
+print(f"Loaded {graph.node_count()} nodes, {graph.edge_count()} edges")
+```
+
+### Change threshold and rebuild
+```python
+extractor.set_threshold(300.0)
+graph = extractor.extract_from_file("sample_navmesh.json")
+```
+
+### Query neighbors
+```python
+neighbors = graph.get_neighbors(node_id=3)
+for neighbor_id, weight in neighbors:
+    print(f"  -> Node {neighbor_id}  cost={weight:.2f}")
+```
+
+### Validate and get stats
+```python
+from graph_utils import validate_graph, graph_stats
+
+warnings = validate_graph(graph)
+for w in warnings:
+    print("WARNING:", w)
+
+stats = graph_stats(graph)
+print(stats)
+# {'node_count': 10, 'edge_count': 64, 'avg_degree': 6.4, 'isolated_nodes': 1}
+```
+
+### Export and re-import
+```python
+from graph_utils import export_graph_to_json, import_graph_from_json
+
+export_graph_to_json(graph, "my_graph.json")
+loaded = import_graph_from_json("my_graph.json")
+assert loaded.node_count() == graph.node_count()
+```
+
+---
+
+## Algorithmic Complexity
 
 | Operation | Data Structure | Time Complexity |
-|-----------|---------------|-----------------|
-| add_node  | dict          | O(1) average    |
-| get_node  | dict          | O(1) average    |
-| add_edge  | dict + list   | O(1) amortized  |
-| get_neighbors | list      | O(degree)       |
-| build_graph (extraction) | nested loop | O(n²) |
+|-----------|----------------|-----------------|
+| `add_node` | dict | O(1) average |
+| `get_node` | dict | O(1) average |
+| `node in graph` | dict | O(1) average |
+| `add_edge` | dict + list | O(degree) for dup-check |
+| `remove_edge` | dict + list | O(degree) for list.remove |
+| `get_neighbors` | list | O(degree) |
+| `has_edge` | dict | O(1) average |
+| `build_graph` (extraction) | nested loop | O(n²) |
+| `validate_graph` | two passes | O(n + e) |
+| `export_graph_to_json` | full traversal | O(n + e) |
 
-> The O(n²) extraction cost is acceptable for NavMesh graphs (typically <1000 nodes).
-> Justify this in your viva using the real-world node count.
+**Why O(n²) for extraction is acceptable:**
+NavMesh graphs in a typical Unreal level contain 100–500 nodes after sampling.
+At 500 nodes, n² = 250,000 comparisons — negligible at runtime.
+The extraction runs once at BeginPlay and the result is cached.
+
+---
+
+## Key Design Decisions
+
+- **Dict-backed adjacency list** (`_nodes: Dict[int, GraphNode]`) gives O(1) node lookup
+  vs O(n) for a list. Essential when A* repeatedly calls `get_node`.
+- **Separate weight dict** (`_weights: Dict[Tuple[int,int], float]`) decouples topology
+  from cost, allowing edge weights to be updated without touching the neighbor lists.
+- **Proximity-threshold extraction** mirrors how Unreal's RecastNavMesh connects
+  nearby convex polygons — the threshold (default 200 UU) should be set to roughly
+  the NavMesh tile size for best results.
+- **Bidirectional edges by default** matches walkable terrain (you can walk back the
+  way you came). One-way edges are supported for ladders / one-way platforms.
