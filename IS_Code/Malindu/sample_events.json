@@ -1,0 +1,7 @@
+[
+  {"event_type": "BARRICADE_PLACED",  "position": [100.0, 50.0, 0.0], "actor_id": "Barricade_01", "timestamp": 1.0},
+  {"event_type": "BARRICADE_PLACED",  "position": [200.0, 50.0, 0.0], "actor_id": "Barricade_02", "timestamp": 3.5},
+  {"event_type": "BARRICADE_REMOVED", "position": [100.0, 50.0, 0.0], "actor_id": "Barricade_01", "timestamp": 8.2},
+  {"event_type": "DOOR_CLOSED",       "position": [150.0,  0.0, 0.0], "actor_id": "Door_A",       "timestamp": 12.0},
+  {"event_type": "DOOR_OPENED",       "position": [150.0,  0.0, 0.0], "actor_id": "Door_A",       "timestamp": 20.0}
+]
