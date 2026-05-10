@@ -49,6 +49,7 @@ class AStarSearch:
             closed_set.add(current)
 
             for neighbor_id, weight in self.graph.get_neighbors(current):
+                # neighbour expansion and g-score update
                 tentative_g = g_scores[current] + weight
                 if tentative_g >= g_scores.get(neighbor_id, float("inf")):
                     continue
@@ -56,6 +57,7 @@ class AStarSearch:
                 came_from[neighbor_id] = current
                 g_scores[neighbor_id] = tentative_g
 
+                # if a neighbor was previously closed, re-open it
                 if neighbor_id in closed_set:
                     closed_set.remove(neighbor_id)
 
