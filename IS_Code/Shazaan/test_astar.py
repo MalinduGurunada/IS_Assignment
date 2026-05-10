@@ -102,6 +102,8 @@ class TestHeuristics(unittest.TestCase):
         h = euclidean_distance((0,0,0), (10,0,0))
         self.assertLessEqual(h, 10.0 + 1e-9)
 
+    # Additional admissibility check will be added in a later commit
+
 
 class TestAStarSearch(unittest.TestCase):
 
