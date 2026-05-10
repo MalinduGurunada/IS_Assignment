@@ -14,6 +14,7 @@ class PathResult:
     path: List[int] = field(default_factory=list)
     total_cost: float = 0.0
     nodes_explored: int = 0
+    elapsed_ms: float = 0.0
 
     def found(self) -> bool:
         """Return True if a path was found."""
