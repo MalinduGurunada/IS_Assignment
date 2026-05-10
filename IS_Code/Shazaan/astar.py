@@ -22,6 +22,7 @@ class AStarSearch:
         if start_id == goal_id:
             return PathResult(path=[start_id], total_cost=0.0, nodes_explored=0)
 
+        # Open set stores (f_score, node_id) and is initialised with the start
         open_set = MinHeap()
         came_from: Dict[int, int] = {}
         g_scores: Dict[int, float] = {start_id: 0.0}
@@ -29,6 +30,7 @@ class AStarSearch:
 
         start_pos = self.graph.get_node(start_id).position
         goal_pos = self.graph.get_node(goal_id).position
+        # initialise open set with start node's heuristic
         open_set.push(start_id, self.heuristic(start_pos, goal_pos))
 
         nodes_explored = 0
