@@ -3,6 +3,9 @@ astar.py
 Simple A* search implementation using the MinHeap and heuristics.
 """
 
+# Time complexity : O((V + E) log V)  with a binary heap
+# Space complexity: O(V)
+
 import time
 from typing import Callable, Dict, List
 
