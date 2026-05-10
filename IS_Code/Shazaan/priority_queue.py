@@ -36,6 +36,7 @@ class MinHeap:
             item    : Hashable object (e.g., node_id).
             priority: Lower value = higher priority.
         """
+        # Time complexity: O(log n)
         if item in self._entry_map:
             self._entry_map[item][2] = self._REMOVED
 
@@ -51,6 +52,7 @@ class MinHeap:
         Raises:
             IndexError: if the queue is empty.
         """
+        # Time complexity: O(log n)
         while self._heap:
             priority, _, item = heapq.heappop(self._heap)
             if item == self._REMOVED:
@@ -66,6 +68,7 @@ class MinHeap:
         Update the priority of an existing item.
         Equivalent to a push (lazy deletion handles the old entry).
         """
+        # Time complexity: O(log n) amortized with lazy deletion
         self.push(item, new_priority)
 
     def contains(self, item: Any) -> bool:
