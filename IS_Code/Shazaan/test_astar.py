@@ -142,6 +142,7 @@ class TestAStarSearch(unittest.TestCase):
 
 
 # Placeholder: add test for zero-weight edges in next commit
+# Placeholder: add brute-force cost comparison test in next commit
 
 
 if __name__ == "__main__":
