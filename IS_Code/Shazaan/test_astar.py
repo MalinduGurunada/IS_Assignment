@@ -141,6 +141,9 @@ class TestAStarSearch(unittest.TestCase):
         self.assertGreater(result.nodes_explored, 0)
 
 
+# Fix edge case: already handled by AStarSearch; this commit documents it
+
+
 # Placeholder: add test for zero-weight edges in next commit
 # Placeholder: add brute-force cost comparison test in next commit
 
