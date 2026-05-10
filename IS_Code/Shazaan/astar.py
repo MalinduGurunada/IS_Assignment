@@ -19,7 +19,7 @@ class AStarSearch:
         self.graph = graph
         self.heuristic = heuristic
 
-    def search(self, start_id: int, goal_id: int) -> PathResult:
+    def search(self, start_id: int, goal_id: int, heuristic: Callable = None) -> PathResult:
         t_start = time.time()
 
         if start_id == goal_id:
@@ -33,8 +33,10 @@ class AStarSearch:
 
         start_pos = self.graph.get_node(start_id).position
         goal_pos = self.graph.get_node(goal_id).position
+        # allow per-call heuristic override
+        h = heuristic if heuristic is not None else self.heuristic
         # initialise open set with start node's heuristic
-        open_set.push(start_id, self.heuristic(start_pos, goal_pos))
+        open_set.push(start_id, h(start_pos, goal_pos))
 
         nodes_explored = 0
 
@@ -66,7 +68,7 @@ class AStarSearch:
                     closed_set.remove(neighbor_id)
 
                 neighbor_pos = self.graph.get_node(neighbor_id).position
-                f_score = tentative_g + self.heuristic(neighbor_pos, goal_pos)
+                f_score = tentative_g + h(neighbor_pos, goal_pos)
                 open_set.push(neighbor_id, f_score)
 
         return PathResult(nodes_explored=nodes_explored)
