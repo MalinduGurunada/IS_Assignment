@@ -81,3 +81,8 @@ def zero_heuristic(a: Position, b: Position) -> float:
     Admissible by definition; consistent by definition.
     """
     return 0.0
+
+# Admissibility proofs and notes
+# - Euclidean: admissible by triangle inequality; never overestimates straight-line distance.
+# - Manhattan: admissible on axis-aligned, unit-cost grids only; may overestimate otherwise.
+# - Octile: crafted for grid diagonals; tighter than Euclidean on grids, still admissible.
