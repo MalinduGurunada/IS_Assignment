@@ -104,6 +104,10 @@ class TestHeuristics(unittest.TestCase):
 
     # Additional admissibility check will be added in a later commit
 
+    def test_heuristic_never_overestimates(self):
+        # simple sanity check: zero heuristic never overestimates
+        self.assertEqual(zero_heuristic((0,0,0),(1,1,1)), 0.0)
+
 
 class TestAStarSearch(unittest.TestCase):
 
