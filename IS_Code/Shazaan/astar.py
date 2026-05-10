@@ -71,6 +71,7 @@ class AStarSearch:
     def reconstruct_path(self, came_from: Dict[int, int], start_id: int, goal_id: int) -> List[int]:
         path = [goal_id]
         current = goal_id
+        # walk backwards through the came_from map to build full path
         while current != start_id:
             current = came_from[current]
             path.append(current)
