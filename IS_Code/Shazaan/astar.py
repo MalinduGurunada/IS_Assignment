@@ -46,6 +46,7 @@ class AStarSearch:
                 path = self.reconstruct_path(came_from, start_id, goal_id)
                 return PathResult(path=path, total_cost=g_scores[current], nodes_explored=nodes_explored)
 
+            # add current node to closed set to avoid re-expansion
             closed_set.add(current)
 
             for neighbor_id, weight in self.graph.get_neighbors(current):
