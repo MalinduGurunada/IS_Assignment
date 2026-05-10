@@ -141,5 +141,8 @@ class TestAStarSearch(unittest.TestCase):
         self.assertGreater(result.nodes_explored, 0)
 
 
+# Placeholder: add test for zero-weight edges in next commit
+
+
 if __name__ == "__main__":
     unittest.main()
