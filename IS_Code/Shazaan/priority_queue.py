@@ -29,3 +29,12 @@ class MinHeap:
                 min_idx = idx
 
         return self._items.pop(min_idx)
+
+    def update_priority(self, item: Any, new_priority: float) -> None:
+        """Update priority of an existing item (or insert if missing)."""
+        for idx, (_, existing_item) in enumerate(self._items):
+            if existing_item == item:
+                self._items[idx] = (new_priority, item)
+                return
+
+        self.push(item, new_priority)
